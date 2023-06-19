@@ -49,6 +49,18 @@ todoRouter.get('/todo/:id', (req, res)=> {
     }) 
 })
 
+todoRouter.put('/todo/:id', (req, res)=> {
+    const id = req.params.id;
+    const {title, description, status} = req.body;
+    task.updateOne({_id:id}, {$set:{title: title, description: description, status:status}})
+    .then((taskFound)=> {
+        return res.send({massege:"Task updated", Task: taskFound});
+    })
+    .catch(err=> {
+        return res.send({massege:"error occure", Error:err});
+    })
+})
+
 todoRouter.delete('/todo/:id', (req, res)=> {
     const id = req.params.id;
     task.deleteOne({_id:id})
