@@ -7,7 +7,7 @@ const PORT = 8000;
 
 
 //connect to dataBase
-mongoose.connect('mongodb://localhost:27017');
+mongoose.connect('mongodb://localhost:27017/todoTask'); // "/todoTask" is name of database and if you not specify it, node will allocate test database by default 
 mongoose.connection.on('connected', ()=> {
     console.log('server is connected to database');
 })
