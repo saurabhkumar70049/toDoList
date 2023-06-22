@@ -7,13 +7,9 @@ const userTask = new mongoose.Schema({
         type:String,
         require:true
     },
-    description: {
-        type:String,
-        require:true
-    },
     status: {
         type:String,
-        require:true
+        default:false
     }
 })
 

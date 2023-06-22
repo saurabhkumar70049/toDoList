@@ -6,31 +6,29 @@ const task = mongoose.model('Task');
 
 
 todoRouter.post('/todo', (req, res)=> {
-    const {title, description, status} = req.body;
+    const {title} = req.body;
     // console.log(title, description, status);
 
-    if(!title || !description || !status) {
-        return res.send("Please fill all require data");
+    if(!title) {
+        return res.status(400).json({sucess: false, message:"", error: "Title is required", data:[]});
     }
 
 
     let newTask = new task({
         title: title,
-        description: description,
-        status:status
     })
     newTask.save()
     .then((saveTask) => {
-        return res.send({massage:"Data is successfully saved in database", Data:saveTask});
+        return res.status(200).json({massage:"Data is successfully saved in database", Data:saveTask});
     }).catch((err) => {
-        return res.send({massege:"Error occure", Error:err});
+        return res.send({success:true, smassege:"Error occure", Error:err});
     });
 })
 
 todoRouter.get('/todo', (req, res)=> {
     task.find()
     .then((foundTask)=> {
-        return res.send({massage:"Task detaile", Task: foundTask});
+        return res.send({success:true, massage:"All Task detaile", data: foundTask});
     })
     .catch(err=> {
         return res.send({massege:"error occure", Error:err});
@@ -49,10 +47,10 @@ todoRouter.get('/todo/:id', (req, res)=> {
     }) 
 })
 
-todoRouter.put('/todo/:id', (req, res)=> {
+todoRouter.patch('/todo/:id', (req, res)=> {
     const id = req.params.id;
-    const {title, description, status} = req.body;
-    task.updateOne({_id:id}, {$set:{title: title, description: description, status:status}})
+    const {title, status} = req.body;
+    task.updateOne({_id:id}, {$set:{title: title, status:status}})
     .then((taskFound)=> {
         return res.send({massege:"Task updated", Task: taskFound});
     })
@@ -65,7 +63,7 @@ todoRouter.delete('/todo/:id', (req, res)=> {
     const id = req.params.id;
     task.deleteOne({_id:id})
     .then((deleteTask)=> {
-        return res.send({massage:"deletion completed", Task:deleteTask})
+        return res.json({massage:"deletion completed", data:deleteTask})
     })
     .catch(err=> {
         return res.send({massege:"error occure ", Error:err});
